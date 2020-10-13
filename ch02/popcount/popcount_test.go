@@ -4,7 +4,7 @@ import (
 	"math"
 	"testing"
 
-	"github.com/bunorita/gopl/ch02/ex03/popcount"
+	"github.com/bunorita/gopl/ch02/popcount"
 )
 
 func TestZero(t *testing.T) {
