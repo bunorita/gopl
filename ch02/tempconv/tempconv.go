@@ -11,6 +11,10 @@ const (
 	AbsoluteZeroC Celsius = -273.15
 	FreezingC     Celsius = 0
 	BoilingC      Celsius = 100
+
+	AbsoluteZeroK Kelvin = 0
+	FreezingK     Kelvin = 273.15
+	BoilingK      Kelvin = 373.15
 )
 
 func (c Celsius) String() string {
