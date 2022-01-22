@@ -29,13 +29,44 @@ func PopCount(x uint64) int {
 		pc[byte(x>>(7*8))]) // for 57-64 bit
 }
 
+// ex 2.3
 // calculate population count by using loop
 func PopCountWithLoop(x uint64) int {
-	var c int
-	for ; x != 0; x = x >> 1 {
-		if x&1 == 1 {
-			c++
-		}
+	var cnt int
+	for i := uint(0); i < 8; i++ {
+		cnt += int(pc[byte(x>>(i*8))])
 	}
-	return c
+	return cnt
+}
+
+// ex 2.4
+func PopCountWithBitShift(x uint64) int {
+	var cnt int
+	for i := 0; i < 64; i++ {
+		if x&1 == 1 {
+			cnt++
+		}
+		x >>= 1 // x = x >> 1
+	}
+	return cnt
+}
+
+// ex 2.5
+// least significant bit, LSB
+func PopCountWithClearingLSB(x uint64) int {
+	var cnt int
+	for x != 0 {
+		// x&(x-1) = 0 or 10 or 100 or 1000 or ...
+		cnt++
+		x = x & (x - 1)
+	}
+	return cnt
+}
+
+// recursive version
+func PopCountWithClearingLSBr(x uint64) int {
+	if x == 0 {
+		return 0
+	}
+	return 1 + PopCountWithClearingLSBr(x&(x-1))
 }

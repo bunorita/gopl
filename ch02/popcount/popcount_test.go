@@ -10,6 +10,9 @@ import (
 func TestZero(t *testing.T) {
 	testZero(t, popcount.PopCount)
 	testZero(t, popcount.PopCountWithLoop)
+	testZero(t, popcount.PopCountWithBitShift)
+	testZero(t, popcount.PopCountWithClearingLSB)
+	testZero(t, popcount.PopCountWithClearingLSBr)
 }
 
 func testZero(t *testing.T, popCount func(uint64) int) {
@@ -22,6 +25,9 @@ func testZero(t *testing.T, popCount func(uint64) int) {
 func TestAllBits(t *testing.T) {
 	testAllBits(t, popcount.PopCount)
 	testAllBits(t, popcount.PopCountWithLoop)
+	testAllBits(t, popcount.PopCountWithBitShift)
+	testAllBits(t, popcount.PopCountWithClearingLSB)
+	testAllBits(t, popcount.PopCountWithClearingLSBr)
 }
 
 // test for math.MaxUint64
@@ -35,6 +41,9 @@ func testAllBits(t *testing.T, popCount func(uint64) int) {
 func TestEachByte(t *testing.T) {
 	testEachByte(t, popcount.PopCount)
 	testEachByte(t, popcount.PopCountWithLoop)
+	testEachByte(t, popcount.PopCountWithBitShift)
+	testEachByte(t, popcount.PopCountWithClearingLSB)
+	testEachByte(t, popcount.PopCountWithClearingLSBr)
 }
 
 // test for 0xff, 0xff00, 0xff0000, ...
@@ -51,6 +60,8 @@ func testEachByte(t *testing.T, popCount func(uint64) int) {
 func Test0x555(t *testing.T) {
 	test0x5555(t, popcount.PopCount)
 	test0x5555(t, popcount.PopCountWithLoop)
+	test0x5555(t, popcount.PopCountWithClearingLSB)
+	test0x5555(t, popcount.PopCountWithClearingLSBr)
 }
 
 // test for 0x5555 (= 0b0101010101010101), ...
@@ -67,6 +78,9 @@ func test0x5555(t *testing.T, popCount func(uint64) int) {
 func TestEachOneBit(t *testing.T) {
 	testEachOneBit(t, popcount.PopCount)
 	testEachOneBit(t, popcount.PopCountWithLoop)
+	testEachOneBit(t, popcount.PopCountWithBitShift)
+	testEachOneBit(t, popcount.PopCountWithClearingLSB)
+	testEachOneBit(t, popcount.PopCountWithClearingLSBr)
 }
 
 func testEachOneBit(t *testing.T, popCount func(uint64) int) {
@@ -88,5 +102,23 @@ func BenchmarkPopCount(b *testing.B) {
 func BenchmarkPopCountWithLoop(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		popcount.PopCountWithLoop(0x1234567890ABCDEF)
+	}
+}
+
+func BenchmarkPopCountWithBitShift(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		popcount.PopCountWithBitShift(0x1234567890ABCDEF)
+	}
+}
+
+func BenchmarkPopCountWithClearingLSB(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		popcount.PopCountWithClearingLSB(0x1234567890ABCDEF)
+	}
+}
+
+func BenchmarkPopCountWithClearingLSBr(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		popcount.PopCountWithClearingLSBr(0x1234567890ABCDEF)
 	}
 }
