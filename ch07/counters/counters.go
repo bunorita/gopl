@@ -30,3 +30,18 @@ func (c *WordCounter) Write(p []byte) (int, error) {
 	*c += WordCounter(count)
 	return len(p), scanner.Err()
 }
+
+type LineCounter int
+
+var _ io.Writer = (*LineCounter)(nil)
+
+func (c *LineCounter) Write(p []byte) (int, error) {
+	scanner := bufio.NewScanner(bytes.NewBuffer(p))
+	scanner.Split(bufio.ScanLines)
+	count := 0
+	for scanner.Scan() {
+		count++
+	}
+	*c += LineCounter(count)
+	return len(p), scanner.Err()
+}

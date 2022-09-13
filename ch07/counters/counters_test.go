@@ -62,3 +62,34 @@ func TestWordCounter(t *testing.T) {
 		})
 	}
 }
+
+func TestLineCounter(t *testing.T) {
+	t.Parallel()
+
+	tests := []*struct {
+		s    string
+		want int
+	}{
+		{"Hello World", 1},
+		{"Hello World\nHello World", 2},
+		{"Hello World\nHello World\n", 2},
+		{"Hello World\nHello World\n\n", 3},
+		{"Hello World! こんにちは　世界", 1},
+		{"Hello World!\nこんにちは　世界", 2},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.s, func(t *testing.T) {
+			t.Parallel()
+
+			var c counters.LineCounter
+			if _, err := c.Write([]byte(tt.s)); err != nil {
+				t.Fatal(err)
+			}
+			if got := int(c); got != tt.want {
+				t.Errorf("got %d, want %d", got, tt.want)
+			}
+		})
+	}
+}
