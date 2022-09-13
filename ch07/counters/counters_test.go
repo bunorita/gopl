@@ -9,29 +9,51 @@ import (
 func TestByteCounter(t *testing.T) {
 	t.Parallel()
 
-	var c counters.ByteCounter
-
 	tests := []struct {
-		p    []byte
+		s    string
 		want int
 	}{
-		{
-			p:    []byte("hello"),
-			want: 5,
-		},
-		{
-			p:    []byte("hello, Dolly"),
-			want: 12,
-		},
+		{"hello", 5},
+		{"hello, Dolly", 12},
 	}
 
 	for _, tt := range tests {
 		tt := tt
-		t.Run(string(tt.p), func(t *testing.T) {
+		t.Run(tt.s, func(t *testing.T) {
 			t.Parallel()
 
-			c.Reset()
-			if _, err := c.Write(tt.p); err != nil {
+			var c counters.ByteCounter
+			if _, err := c.Write([]byte(tt.s)); err != nil {
+				t.Fatal(err)
+			}
+			if got := int(c); got != tt.want {
+				t.Errorf("got %d, want %d", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestWordCounter(t *testing.T) {
+	t.Parallel()
+
+	tests := []*struct {
+		s    string
+		want int
+	}{
+		{"Hello World", 2},
+		{"Hello My World", 3},
+		{"Hello My World ", 3},
+		{"Hello World! こんにちは　世界", 4},
+		{"Hello World!\nこんにちは　世界", 4},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.s, func(t *testing.T) {
+			t.Parallel()
+
+			var c counters.WordCounter
+			if _, err := c.Write([]byte(tt.s)); err != nil {
 				t.Fatal(err)
 			}
 			if got := int(c); got != tt.want {
