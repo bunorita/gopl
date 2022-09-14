@@ -1,6 +1,7 @@
 package counters_test
 
 import (
+	"os"
 	"testing"
 
 	"github.com/bunorita/gopl/ch07/counters"
@@ -91,5 +92,32 @@ func TestLineCounter(t *testing.T) {
 				t.Errorf("got %d, want %d", got, tt.want)
 			}
 		})
+	}
+}
+
+func TestCountingWriter(t *testing.T) {
+	t.Parallel()
+
+	ss := []string{
+		"Hello World\n",
+		"How are you?\n",
+		"The Go Programming Language\n",
+		"プログラミング言語Go\n",
+	}
+
+	w, c := counters.CountingWriter(os.Stdout)
+
+	var total int64 = 0
+
+	for _, s := range ss {
+		b := []byte(s)
+		if _, err := w.Write(b); err != nil {
+			t.Fatal(err)
+		}
+		total += int64(len(b))
+
+		if *c != total {
+			t.Errorf("count is %d, want %d", *c, total)
+		}
 	}
 }

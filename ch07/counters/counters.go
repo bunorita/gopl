@@ -45,3 +45,26 @@ func (c *LineCounter) Write(p []byte) (int, error) {
 	*c += LineCounter(count)
 	return len(p), scanner.Err()
 }
+
+// ex7.2
+func CountingWriter(w io.Writer) (io.Writer, *int64) {
+	cw := newCountingWriter(w)
+	return cw, &cw.count
+}
+
+var _ io.Writer = (*countingWriter)(nil)
+
+func newCountingWriter(w io.Writer) *countingWriter {
+	return &countingWriter{w: w}
+}
+
+type countingWriter struct {
+	count int64
+	w     io.Writer
+}
+
+func (cw *countingWriter) Write(p []byte) (int, error) {
+	n, err := cw.w.Write(p)
+	cw.count += int64(n)
+	return n, err
+}
